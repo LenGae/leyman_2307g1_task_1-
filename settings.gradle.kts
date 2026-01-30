@@ -19,4 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "draft"
+rootProject.name = "practice"
+include(":main")
