@@ -10,6 +10,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import android.graphics.Color
+import android.os.Debug
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
@@ -89,7 +91,7 @@ class MainFragment : Fragment() {
 
                 button.setBackgroundColor(color)
             } else {
-                Toast.makeText(requireContext(), "Цвет не найден", Toast.LENGTH_SHORT).show()
+                Log.d("Ошибка", "Цвет не найден")
             }
         }
     }
