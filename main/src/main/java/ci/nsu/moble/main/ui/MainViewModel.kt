@@ -1,4 +1,4 @@
-package ci.nsu.moble.main.ui.main
+package ci.nsu.moble.main.ui
 
 import androidx.lifecycle.ViewModel
 
