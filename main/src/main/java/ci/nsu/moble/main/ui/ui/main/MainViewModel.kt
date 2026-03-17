@@ -30,14 +30,20 @@ class MainViewModel : ViewModel() {
         val text = _uiState.value.newItemText
         if (text.isNotBlank()) {
             _uiState.update { state ->
-                val newItem = ShoppingItem(
-                    id = state.items.size + 1,
-                    name = text
-                )
-                state.copy(
-                    items = state.items + newItem,
-                    newItemText = ""
-                )
+                val exists = state.items.any { it.name.equals(text, ignoreCase = true) }
+
+                if (exists) {
+                    state
+                } else {
+                    val newItem = ShoppingItem(
+                        id = state.items.size + 1,
+                        name = text
+                    )
+                    state.copy(
+                        items = state.items + newItem,
+                        newItemText = ""
+                    )
+                }
             }
         }
     }
