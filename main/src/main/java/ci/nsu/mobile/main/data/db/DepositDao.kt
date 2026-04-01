@@ -3,13 +3,13 @@ package ci.nsu.mobile.main.data.db
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DepositDao {
+
     @Insert
-    suspend fun insert(deposit: DepositEntity)
+    suspend fun insertDeposit(deposit: DepositEntity)
 
     @Query("SELECT * FROM deposit_calculations ORDER BY calculationDate DESC")
-    fun getAllDeposits(): Flow<List<DepositEntity>>
+    suspend fun getAllDeposits(): List<DepositEntity>
 }

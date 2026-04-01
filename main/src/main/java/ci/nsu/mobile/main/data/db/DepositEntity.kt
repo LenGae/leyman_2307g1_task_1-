@@ -2,7 +2,6 @@ package ci.nsu.mobile.main.data.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.io.Serializable
 
 @Entity(tableName = "deposit_calculations")
 data class DepositEntity(
@@ -10,8 +9,8 @@ data class DepositEntity(
     val initialAmount: Double,
     val periodMonths: Int,
     val interestRate: Double,
-    val monthlyTopUp: Double?,
+    val monthlyTopUp: Double,
     val finalAmount: Double,
     val interestEarned: Double,
     val calculationDate: Long
-) : Serializable
+)
