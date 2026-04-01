@@ -10,6 +10,7 @@ import com.google.android.material.textfield.TextInputLayout
 import ci.nsu.mobile.main.R
 import ci.nsu.mobile.main.data.db.DepositDatabase
 import ci.nsu.mobile.main.data.repository.DepositRepository
+import ci.nsu.mobile.main.viewmodel.MainViewModelFactory
 
 class Step1Fragment : Fragment(R.layout.fragment_step1) {
 
@@ -51,11 +52,9 @@ class Step1Fragment : Fragment(R.layout.fragment_step1) {
             } else tilPeriod.error = null
 
             if (valid) {
-                // Сохраняем в ViewModel
                 mainViewModel.initialAmount = amount!!
                 mainViewModel.periodMonths = period!!
 
-                // Переходим к следующему фрагменту
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.container, Step2Fragment.newInstance())
                     .addToBackStack(null)

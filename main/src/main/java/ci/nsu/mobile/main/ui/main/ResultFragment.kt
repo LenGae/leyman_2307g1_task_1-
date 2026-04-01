@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import ci.nsu.mobile.main.R
 import ci.nsu.mobile.main.data.db.DepositDatabase
 import ci.nsu.mobile.main.data.repository.DepositRepository
+import ci.nsu.mobile.main.viewmodel.MainViewModelFactory
 
 class ResultFragment : Fragment(R.layout.fragment_result) {
 

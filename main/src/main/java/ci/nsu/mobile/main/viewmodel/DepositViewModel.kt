@@ -4,18 +4,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ci.nsu.mobile.main.data.db.DepositEntity
 import ci.nsu.mobile.main.data.repository.DepositRepository
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val repository: DepositRepository) : ViewModel() {
+class DepositViewModel(private val repository: DepositRepository) : ViewModel() {
 
-    val history = repository.getHistory()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    private val _history = MutableStateFlow<List<DepositEntity>>(emptyList())
+    val history: StateFlow<List<DepositEntity>> = _history
+
+    init {
+        loadHistory()
+    }
+
+    fun loadHistory() {
+        viewModelScope.launch {
+            _history.value = repository.getHistory()
+        }
+    }
 
     fun insertDeposit(deposit: DepositEntity) {
         viewModelScope.launch {
             repository.insertDeposit(deposit)
+            loadHistory()
         }
     }
 }

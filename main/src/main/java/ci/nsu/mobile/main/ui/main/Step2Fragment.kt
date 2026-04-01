@@ -12,6 +12,7 @@ import com.google.android.material.textfield.TextInputLayout
 import ci.nsu.mobile.main.R
 import ci.nsu.mobile.main.data.db.DepositDatabase
 import ci.nsu.mobile.main.data.repository.DepositRepository
+import ci.nsu.mobile.main.viewmodel.MainViewModelFactory
 
 class Step2Fragment : Fragment(R.layout.fragment_step2) {
 
@@ -36,10 +37,8 @@ class Step2Fragment : Fragment(R.layout.fragment_step2) {
         val btnBack = view.findViewById<Button>(R.id.btn_back)
         val btnCalculate = view.findViewById<Button>(R.id.btn_calculate)
 
-        // Получаем срок вклада из MainViewModel
         val period = mainViewModel.periodMonths
 
-        // Доступные процентные ставки
         val rates = when {
             period < 6 -> listOf("15")
             period in 6..11 -> listOf("10")
@@ -59,14 +58,11 @@ class Step2Fragment : Fragment(R.layout.fragment_step2) {
                 return@setOnClickListener
             } else tilTopUp.error = null
 
-            // Сохраняем в MainViewModel
             mainViewModel.interestRate = interest
             mainViewModel.monthlyTopUp = topUp
 
-            // Рассчитываем итоговую сумму
             mainViewModel.calculateFinalAmount()
 
-            // Переходим к ResultFragment
             parentFragmentManager.beginTransaction()
                 .replace(R.id.container, ResultFragment.newInstance())
                 .addToBackStack(null)
