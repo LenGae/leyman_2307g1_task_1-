@@ -34,7 +34,7 @@ class Step1Fragment : Fragment(R.layout.fragment_step1) {
         val tilAmount = view.findViewById<TextInputLayout>(R.id.til_start_amount)
         val tilPeriod = view.findViewById<TextInputLayout>(R.id.til_period)
         val btnNext = view.findViewById<Button>(R.id.btn_next)
-        val btnBack = view.findViewById<Button>(R.id.btn_back)
+        val btnBack = view.findViewById<Button?>(R.id.btn_back)
 
         btnNext.setOnClickListener {
             val amount = etAmount.text.toString().toDoubleOrNull()
@@ -62,7 +62,7 @@ class Step1Fragment : Fragment(R.layout.fragment_step1) {
             }
         }
 
-        btnBack.setOnClickListener {
+        btnBack?.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
     }
