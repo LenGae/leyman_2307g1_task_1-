@@ -1,5 +1,6 @@
 package ci.nsu.mobile.main.ui.main
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -39,38 +40,62 @@ class Step2Fragment : Fragment(R.layout.fragment_step2) {
 
         val period = mainViewModel.periodMonths
 
-        val rates = when {
-            period < 6 -> listOf("15")
-            period in 6..11 -> listOf("10")
-            period >= 12 -> listOf("5")
-            else -> listOf("5","10","15")
-        }
-
+        val rates = listOf("5", "10", "15")
         spinner.adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, rates)
 
-        btnCalculate.setOnClickListener {
-            val interest = spinner.selectedItem.toString().toDoubleOrNull()
-            val topUp = etTopUp.text.toString().toDoubleOrNull() ?: 0.0
+        val recommendation = when {
+            period < 6 -> "Рекомендуемый процент: 15% для срока < 6 мес."
+            period in 6..11 -> "Рекомендуемый процент: 10% для срока 6-11 мес."
+            period >= 12 -> "Рекомендуемый процент: 5% для срока >= 12 мес."
+            else -> ""
+        }
 
-            if (interest == null) {
+        spinner.setSelection(0)
+
+        btnCalculate.setOnClickListener {
+            val selectedRate = spinner.selectedItem.toString().toDoubleOrNull()
+            val topUp = etTopUp.text.toString().toIntOrNull() ?: 0
+
+            if (selectedRate == null) {
                 tilTopUp.error = "Выберите процент"
                 return@setOnClickListener
             } else tilTopUp.error = null
 
-            mainViewModel.interestRate = interest
-            mainViewModel.monthlyTopUp = topUp
+            val isRecommended = when {
+                period < 6 && selectedRate == 15.0 -> true
+                period in 6..11 && selectedRate == 10.0 -> true
+                period >= 12 && selectedRate == 5.0 -> true
+                else -> false
+            }
 
-            mainViewModel.calculateFinalAmount()
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.container, ResultFragment.newInstance())
-                .addToBackStack(null)
-                .commit()
+            if (!isRecommended) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Выбор процента")
+                    .setMessage("Вы выбрали процент $selectedRate%. $recommendation\nПродолжить?")
+                    .setPositiveButton("Да") { _, _ ->
+                        proceedCalculation(selectedRate, topUp)
+                    }
+                    .setNegativeButton("Нет", null)
+                    .show()
+            } else {
+                proceedCalculation(selectedRate, topUp)
+            }
         }
 
         btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+    }
+
+    private fun proceedCalculation(interest: Double, topUp: Int) {
+        mainViewModel.interestRate = interest
+        mainViewModel.monthlyTopUp = topUp
+        mainViewModel.calculateFinalAmount()
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.container, ResultFragment.newInstance())
+            .addToBackStack(null)
+            .commit()
     }
 }

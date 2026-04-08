@@ -37,7 +37,7 @@ class Step1Fragment : Fragment(R.layout.fragment_step1) {
         val btnBack = view.findViewById<Button?>(R.id.btn_back)
 
         btnNext.setOnClickListener {
-            val amount = etAmount.text.toString().toDoubleOrNull()
+            val amount = etAmount.text.toString().toIntOrNull()
             val period = etPeriod.text.toString().toIntOrNull()
             var valid = true
 

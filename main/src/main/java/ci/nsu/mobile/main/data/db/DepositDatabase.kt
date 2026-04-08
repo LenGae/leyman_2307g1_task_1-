@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [DepositEntity::class], version = 1)
+@Database(entities = [DepositEntity::class], version = 2)
 abstract class DepositDatabase : RoomDatabase() {
 
     abstract fun depositDao(): DepositDao
@@ -20,7 +20,9 @@ abstract class DepositDatabase : RoomDatabase() {
                     context.applicationContext,
                     DepositDatabase::class.java,
                     "deposits_db"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }

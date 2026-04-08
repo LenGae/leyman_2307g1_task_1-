@@ -4,24 +4,34 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ci.nsu.mobile.main.data.db.DepositEntity
 import ci.nsu.mobile.main.data.repository.DepositRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class MainViewModel(private val repository: DepositRepository) : ViewModel() {
 
-    var initialAmount: Double = 0.0
+    var initialAmount: Int = 0
     var periodMonths: Int = 0
     var interestRate: Double = 0.0
-    var monthlyTopUp: Double = 0.0
-    var finalAmount: Double = 0.0
-    var interestEarned: Double = 0.0
+    var monthlyTopUp: Int = 0
+    var finalAmount: Int = 0
+    var interestEarned: Int = 0
+
+    private val _history = MutableStateFlow<List<DepositEntity>>(emptyList())
+    val history: StateFlow<List<DepositEntity>> = _history
+
+    init {
+        loadHistory()
+    }
 
     fun calculateFinalAmount() {
-        var amount = initialAmount
+        var amount = initialAmount.toDouble()
         for (i in 1..periodMonths) {
             val interest = amount * (interestRate / 100)
             amount += interest + monthlyTopUp
         }
-        finalAmount = amount
+        finalAmount = amount.roundToInt()
         interestEarned = finalAmount - initialAmount - monthlyTopUp * periodMonths
     }
 
@@ -48,6 +58,13 @@ class MainViewModel(private val repository: DepositRepository) : ViewModel() {
         )
         viewModelScope.launch {
             repository.insertDeposit(deposit)
+            loadHistory()
+        }
+    }
+
+    fun loadHistory() {
+        viewModelScope.launch {
+            _history.value = repository.getHistory()
         }
     }
 }

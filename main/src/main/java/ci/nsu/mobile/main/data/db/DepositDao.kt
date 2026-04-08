@@ -10,6 +10,6 @@ interface DepositDao {
     @Insert
     suspend fun insertDeposit(deposit: DepositEntity)
 
-    @Query("SELECT * FROM deposit_calculations ORDER BY calculationDate DESC")
+    @Query("SELECT * FROM deposits ORDER BY calculationDate DESC")
     suspend fun getAllDeposits(): List<DepositEntity>
 }
