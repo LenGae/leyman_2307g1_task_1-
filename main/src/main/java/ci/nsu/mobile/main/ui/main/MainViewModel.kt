@@ -56,9 +56,23 @@ class MainViewModel(private val repository: DepositRepository) : ViewModel() {
             interestEarned = interestEarned,
             calculationDate = System.currentTimeMillis()
         )
+
         viewModelScope.launch {
-            repository.insertDeposit(deposit)
-            loadHistory()
+            val currentHistory = repository.getHistory()
+
+            val alreadyExists = currentHistory.any {
+                it.initialAmount == deposit.initialAmount &&
+                        it.periodMonths == deposit.periodMonths &&
+                        it.interestRate == deposit.interestRate &&
+                        it.monthlyTopUp == deposit.monthlyTopUp &&
+                        it.finalAmount == deposit.finalAmount &&
+                        it.interestEarned == deposit.interestEarned
+            }
+
+            if (!alreadyExists) {
+                repository.insertDeposit(deposit)
+                loadHistory()
+            }
         }
     }
 
