@@ -12,4 +12,7 @@ class DepositRepository(private val depositDao: DepositDao) {
     suspend fun getHistory(): List<DepositEntity> {
         return depositDao.getAllDeposits()
     }
+    suspend fun deleteDeposit(deposit: DepositEntity) {
+        depositDao.deleteDeposit(deposit)
+    }
 }

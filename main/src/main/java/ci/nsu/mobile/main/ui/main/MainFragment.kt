@@ -1,10 +1,10 @@
 package ci.nsu.mobile.main.ui.main
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import ci.nsu.mobile.main.R
 import ci.nsu.mobile.main.databinding.FragmentMainBinding
 
@@ -17,7 +17,11 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -34,7 +38,7 @@ class MainFragment : Fragment() {
 
         binding.button2.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.container, HistoryFragment())
+                .replace(R.id.container, HistoryFragment.newInstance())
                 .addToBackStack(null)
                 .commit()
         }

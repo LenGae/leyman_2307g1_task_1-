@@ -3,6 +3,7 @@ package ci.nsu.mobile.main.data.db
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Delete
 
 @Dao
 interface DepositDao {
@@ -12,4 +13,7 @@ interface DepositDao {
 
     @Query("SELECT * FROM deposits ORDER BY calculationDate DESC")
     suspend fun getAllDeposits(): List<DepositEntity>
+
+    @Delete
+    suspend fun deleteDeposit(deposit: DepositEntity)
 }

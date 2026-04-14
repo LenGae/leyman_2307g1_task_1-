@@ -81,4 +81,31 @@ class MainViewModel(private val repository: DepositRepository) : ViewModel() {
             _history.value = repository.getHistory()
         }
     }
+
+    fun deleteDeposit(
+        initialAmount: Int,
+        periodMonths: Int,
+        interestRate: Double,
+        monthlyTopUp: Int,
+        finalAmount: Int,
+        interestEarned: Int
+    ) {
+        viewModelScope.launch {
+            val currentHistory = repository.getHistory()
+
+            val item = currentHistory.find {
+                it.initialAmount == initialAmount &&
+                        it.periodMonths == periodMonths &&
+                        it.interestRate == interestRate &&
+                        it.monthlyTopUp == monthlyTopUp &&
+                        it.finalAmount == finalAmount &&
+                        it.interestEarned == interestEarned
+            }
+
+            item?.let {
+                repository.deleteDeposit(it)
+                loadHistory()
+            }
+        }
+    }
 }

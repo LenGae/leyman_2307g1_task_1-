@@ -50,8 +50,18 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
 
         lvHistory.setOnItemClickListener { _, _, position, _ ->
+            val selected = depositViewModel.history.value[position]
+
             parentFragmentManager.beginTransaction()
-                .replace(R.id.container, ResultFragment.newInstance())
+                .replace(R.id.container, ResultFragment.newInstance(
+                    selected.initialAmount,
+                    selected.periodMonths,
+                    selected.interestRate,
+                    selected.monthlyTopUp,
+                    selected.finalAmount,
+                    selected.interestEarned,
+                    true
+                ))
                 .addToBackStack(null)
                 .commit()
         }
