@@ -3,6 +3,7 @@ package ci.nsu.mobile.main.ui.main
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -34,6 +35,12 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         super.onViewCreated(view, savedInstanceState)
 
         lvHistory = view.findViewById(R.id.lv_history)
+
+        val btnBack = view.findViewById<Button>(R.id.btn_back)
+
+        btnBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             depositViewModel.history.collectLatest { historyList ->

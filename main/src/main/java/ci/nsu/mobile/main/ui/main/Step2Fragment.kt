@@ -94,7 +94,18 @@ class Step2Fragment : Fragment(R.layout.fragment_step2) {
         mainViewModel.calculateFinalAmount()
 
         parentFragmentManager.beginTransaction()
-            .replace(R.id.container, ResultFragment.newInstance())
+            .replace(
+                R.id.container,
+                ResultFragment.newInstance(
+                    mainViewModel.initialAmount,
+                    mainViewModel.periodMonths,
+                    mainViewModel.interestRate,
+                    mainViewModel.monthlyTopUp,
+                    mainViewModel.finalAmount,
+                    mainViewModel.interestEarned,
+                    false
+                )
+            )
             .addToBackStack(null)
             .commit()
     }
