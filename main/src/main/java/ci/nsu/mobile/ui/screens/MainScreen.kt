@@ -1,75 +1,99 @@
 package ci.nsu.mobile.ui.screens
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.compose.*
+import ci.nsu.mobile.data.db.DepositCalculation
 import ci.nsu.mobile.ui.viewmodel.AuthViewModel
+import ci.nsu.mobile.ui.viewmodel.DepositViewModel
+import ci.nsu.mobile.utils.TokenManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(vm: AuthViewModel, navController: NavController) {
+fun MainScreen(
+    authVm: AuthViewModel,
+    depositVm: DepositViewModel
+) {
 
-    LaunchedEffect(Unit) {
-        vm.loadUsers()
-    }
+    val navController = rememberNavController()
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text("Пользователи")
-                }
-            )
+        bottomBar = {
+            NavigationBar {
+
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { navController.navigate("users") },
+                    label = { Text("Пользователи") },
+                    icon = {}
+                )
+
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { navController.navigate("history") },
+                    label = { Text("Расчёты") },
+                    icon = {}
+                )
+
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { navController.navigate("new") },
+                    label = { Text("Новый") },
+                    icon = {}
+                )
+            }
         }
     ) { padding ->
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp)
+        NavHost(
+            navController = navController,
+            startDestination = "users",
+            modifier = Modifier.padding(padding)
         ) {
 
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-
-                items(vm.users) { user ->
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        elevation = CardDefaults.cardElevation(4.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-
-                            Text("👤 ${user.login}")
-                            Text("📧 ${user.email}")
-                            Text("📱 ${user.phoneNumber}")
-                            Text("🎭 Role: ${user.roleId}")
-                            Text("🆔 ID: ${user.userId}")
-                        }
-                    }
-                }
+            composable("users") {
+                UsersScreen(authVm)
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            composable("history") {
+                CalculationsScreen(
+                    vm = depositVm,
+                    userId = TokenManager.userId,
+                    onOpen = {
+                        navController.currentBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("calc", it)
 
-            Button(
-                onClick = {
-                    vm.logout()
-                    navController.navigate("login") {
-                        popUpTo("main") { inclusive = true }
+                        navController.navigate("details")
                     }
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Выйти")
+                )
+            }
+
+            composable("new") {
+                NewCalculationScreen(
+                    vm = depositVm,
+                    userId = TokenManager.userId,
+                    onDone = { navController.navigate("history") }
+                )
+            }
+
+            composable("details") {
+                val item =
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.get<DepositCalculation>("calc")
+
+                if (item != null) {
+                    CalculationDetailsScreen(
+                        item = item,
+                        vm = depositVm,
+                        userId = TokenManager.userId,
+                        onBack = { navController.popBackStack() }
+                    )
+                }
             }
         }
     }

@@ -31,6 +31,7 @@ class AuthViewModel : ViewModel() {
 
             result.onSuccess {
                 TokenManager.token = it
+                TokenManager.userId = -1L // или убери вообще
                 isLoggedIn = true
             }.onFailure {
                 error = it.message
@@ -46,6 +47,7 @@ class AuthViewModel : ViewModel() {
 
             result.onSuccess {
                 TokenManager.token = it
+                TokenManager.userId = -1L // или убери вообще
                 isLoggedIn = true
             }.onFailure {
                 error = it.message
