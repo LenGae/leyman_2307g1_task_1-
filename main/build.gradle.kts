@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.kotlin.compose)
     id("org.jetbrains.kotlin.kapt")
+    id("kotlin-parcelize")
 }
 
 android {

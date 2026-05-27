@@ -9,15 +9,13 @@ object RetrofitClient {
 
     const val BASE_URL = "http://192.168.200.160:8080/api/"
 
-    val client = OkHttpClient.Builder()
-        .addInterceptor(AuthInterceptor())
-        .build()
+    fun createApi(): ApiService {
 
-    val api: ApiService by lazy {
+        val client = OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor())
+            .build()
 
-        Log.d("API", "BASE_URL = $BASE_URL")
-
-        Retrofit.Builder()
+        return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())

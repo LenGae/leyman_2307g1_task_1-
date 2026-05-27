@@ -9,8 +9,8 @@ class DepositRepository(private val dao: DepositDao) {
         dao.insert(item)
     }
 
-    suspend fun getHistory(userId: Long): List<DepositCalculation> {
-        return dao.getHistory(userId)
+    suspend fun getHistory(login: String): List<DepositCalculation> {
+        return dao.getHistory(login)
     }
 
     suspend fun deleteDeposit(item: DepositCalculation) {

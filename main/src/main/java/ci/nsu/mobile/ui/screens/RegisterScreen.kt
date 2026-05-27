@@ -63,8 +63,6 @@ fun RegisterScreen(vm: AuthViewModel, navController: NavController) {
 
         Spacer(Modifier.height(16.dp))
 
-        // ================= PERSON =================
-
         OutlinedTextField(
             value = firstName,
             onValueChange = { firstName = it },
@@ -87,8 +85,6 @@ fun RegisterScreen(vm: AuthViewModel, navController: NavController) {
         )
 
         Spacer(Modifier.height(8.dp))
-
-        // ================= DATE PICKER (CLICK FIELD) =================
 
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
@@ -115,8 +111,6 @@ fun RegisterScreen(vm: AuthViewModel, navController: NavController) {
 
         Spacer(Modifier.height(8.dp))
 
-        // ================= GENDER =================
-
         Text("Пол")
 
         Row {
@@ -136,8 +130,6 @@ fun RegisterScreen(vm: AuthViewModel, navController: NavController) {
         }
 
         Spacer(Modifier.height(8.dp))
-
-        // ================= GROUP =================
 
         Box {
             OutlinedButton(onClick = { expanded = true }) {
@@ -161,8 +153,6 @@ fun RegisterScreen(vm: AuthViewModel, navController: NavController) {
         }
 
         Spacer(Modifier.height(16.dp))
-
-        // ================= AUTH =================
 
         OutlinedTextField(
             value = login,
@@ -237,8 +227,6 @@ fun RegisterScreen(vm: AuthViewModel, navController: NavController) {
             CircularProgressIndicator()
         }
     }
-
-    // ================= DATE PICKER =================
 
     if (showDatePicker) {
 

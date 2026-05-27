@@ -14,8 +14,11 @@ fun UsersScreen(
     vm: AuthViewModel
 ) {
 
-    LaunchedEffect(Unit) {
-        vm.loadUsers()
+    LaunchedEffect(vm.isLoggedIn) {
+
+        if (vm.isLoggedIn) {
+            vm.loadUsers()
+        }
     }
 
     Column(
@@ -24,10 +27,24 @@ fun UsersScreen(
             .padding(16.dp)
     ) {
 
-        Text(
-            text = "Пользователи",
-            style = MaterialTheme.typography.headlineMedium
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Text(
+                text = "Пользователи",
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            Button(
+                onClick = {
+                    vm.logout()
+                }
+            ) {
+                Text("Выйти")
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -35,34 +52,48 @@ fun UsersScreen(
             CircularProgressIndicator()
         }
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        vm.error?.let {
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
 
-            items(vm.users) { user ->
+        if (vm.users.isEmpty()) {
 
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = CardDefaults.cardElevation(4.dp)
-                ) {
+            Text("Нет пользователей")
 
-                    Column(
-                        modifier = Modifier.padding(16.dp)
+        } else {
+
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+
+                items(vm.users) { user ->
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = CardDefaults.cardElevation(4.dp)
                     ) {
 
-                        Text("👤 ${user.login}")
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
 
-                        Spacer(modifier = Modifier.height(4.dp))
+                            Text("👤 ${user.login}")
 
-                        Text("📧 ${user.email}")
+                            Spacer(modifier = Modifier.height(4.dp))
 
-                        Spacer(modifier = Modifier.height(4.dp))
+                            Text("📧 ${user.email}")
 
-                        Text("📱 ${user.phoneNumber}")
+                            Spacer(modifier = Modifier.height(4.dp))
 
-                        Spacer(modifier = Modifier.height(4.dp))
+                            Text("📱 ${user.phoneNumber}")
 
-                        Text("🆔 ID: ${user.userId}")
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            Text("🆔 ID: ${user.userId}")
+                        }
                     }
                 }
             }

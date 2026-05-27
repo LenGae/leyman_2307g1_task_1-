@@ -17,27 +17,23 @@ fun MainScreen(
     authVm: AuthViewModel,
     depositVm: DepositViewModel
 ) {
-
     val navController = rememberNavController()
 
     Scaffold(
         bottomBar = {
             NavigationBar {
-
                 NavigationBarItem(
                     selected = false,
                     onClick = { navController.navigate("users") },
                     label = { Text("Пользователи") },
                     icon = {}
                 )
-
                 NavigationBarItem(
                     selected = false,
                     onClick = { navController.navigate("history") },
                     label = { Text("Расчёты") },
                     icon = {}
                 )
-
                 NavigationBarItem(
                     selected = false,
                     onClick = { navController.navigate("new") },
@@ -47,13 +43,11 @@ fun MainScreen(
             }
         }
     ) { padding ->
-
         NavHost(
             navController = navController,
             startDestination = "users",
             modifier = Modifier.padding(padding)
         ) {
-
             composable("users") {
                 UsersScreen(authVm)
             }
@@ -61,12 +55,11 @@ fun MainScreen(
             composable("history") {
                 CalculationsScreen(
                     vm = depositVm,
-                    userId = TokenManager.userId,
+                    userLogin = TokenManager.userLogin,
                     onOpen = {
                         navController.currentBackStackEntry
                             ?.savedStateHandle
                             ?.set("calc", it)
-
                         navController.navigate("details")
                     }
                 )
@@ -75,22 +68,21 @@ fun MainScreen(
             composable("new") {
                 NewCalculationScreen(
                     vm = depositVm,
-                    userId = TokenManager.userId,
+                    userLogin = TokenManager.userLogin,
                     onDone = { navController.navigate("history") }
                 )
             }
 
             composable("details") {
-                val item =
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.get<DepositCalculation>("calc")
+                val item = navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.get<DepositCalculation>("calc")
 
                 if (item != null) {
                     CalculationDetailsScreen(
                         item = item,
                         vm = depositVm,
-                        userId = TokenManager.userId,
+                        userLogin = TokenManager.userLogin,
                         onBack = { navController.popBackStack() }
                     )
                 }

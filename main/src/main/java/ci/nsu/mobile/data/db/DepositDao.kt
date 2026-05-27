@@ -4,9 +4,8 @@ import androidx.room.*
 
 @Dao
 interface DepositDao {
-
-    @Query("SELECT * FROM deposit_calculations WHERE userId = :userId ORDER BY calculationDate DESC")
-    suspend fun getHistory(userId: Long): List<DepositCalculation>
+    @Query("SELECT * FROM deposit_calculations WHERE userLogin = :login ORDER BY calculationDate DESC")
+    suspend fun getHistory(login: String): List<DepositCalculation>
 
     @Insert
     suspend fun insert(item: DepositCalculation)

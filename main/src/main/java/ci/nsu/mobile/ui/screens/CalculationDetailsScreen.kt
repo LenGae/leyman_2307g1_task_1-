@@ -12,7 +12,7 @@ import ci.nsu.mobile.ui.viewmodel.DepositViewModel
 fun CalculationDetailsScreen(
     item: DepositCalculation,
     vm: DepositViewModel,
-    userId: Long,
+    userLogin: String,
     onBack: () -> Unit
 ) {
 
@@ -36,7 +36,7 @@ fun CalculationDetailsScreen(
         Spacer(Modifier.height(16.dp))
 
         Button(onClick = {
-            vm.delete(item, userId)
+            vm.delete(item, userLogin)
             onBack()
         }) {
             Text("Удалить")

@@ -14,12 +14,12 @@ import ci.nsu.mobile.ui.viewmodel.DepositViewModel
 @Composable
 fun CalculationsScreen(
     vm: DepositViewModel,
-    userId: Long,
+    userLogin: String,
     onOpen: (DepositCalculation) -> Unit
 ) {
 
-    LaunchedEffect(Unit) {
-        vm.load(userId)
+    LaunchedEffect(userLogin) {
+        vm.load(userLogin)
     }
 
     Column(
@@ -28,7 +28,7 @@ fun CalculationsScreen(
             .padding(16.dp)
     ) {
 
-        Text("История расчётов", style = MaterialTheme.typography.headlineMedium)
+        Text("История расчётов (ID: $userLogin)", style = MaterialTheme.typography.headlineMedium)
 
         Spacer(Modifier.height(16.dp))
 

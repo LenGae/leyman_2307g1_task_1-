@@ -8,6 +8,9 @@ import androidx.navigation.compose.*
 import androidx.compose.runtime.*
 
 import ci.nsu.mobile.di.ServiceLocator
+import ci.nsu.mobile.ui.screens.LoginScreen
+import ci.nsu.mobile.ui.screens.MainScreen
+import ci.nsu.mobile.ui.screens.RegisterScreen
 import ci.nsu.mobile.ui.viewmodel.AppViewModelFactory
 import ci.nsu.mobile.ui.viewmodel.AuthViewModel
 import ci.nsu.mobile.ui.viewmodel.DepositViewModel
@@ -26,8 +29,7 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val navController = rememberNavController()
-
-            val authVm = remember { AuthViewModel() }
+            val authVm: AuthViewModel = viewModel()
 
             val depositVm: DepositViewModel = viewModel(
                 factory = AppViewModelFactory(
@@ -35,30 +37,36 @@ class MainActivity : ComponentActivity() {
                 )
             )
 
-            val startDestination =
-                if (TokenManager.token != null) "main" else "login"
+            LaunchedEffect(authVm.isLoggedIn) {
+                if (!authVm.isLoggedIn) {
+
+                    depositVm.clearHistory()
+
+                    navController.navigate("login") {
+                        popUpTo(0)
+                    }
+                } else {
+                    navController.navigate("main") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+            }
 
             NavHost(
                 navController = navController,
-                startDestination = startDestination
+                startDestination = "login"
             ) {
 
                 composable("login") {
-                    ci.nsu.mobile.ui.screens.LoginScreen(
-                        vm = authVm,
-                        navController = navController
-                    )
+                    LoginScreen(vm = authVm, navController = navController)
                 }
 
                 composable("register") {
-                    ci.nsu.mobile.ui.screens.RegisterScreen(
-                        vm = authVm,
-                        navController = navController
-                    )
+                    RegisterScreen(vm = authVm, navController = navController)
                 }
 
                 composable("main") {
-                    ci.nsu.mobile.ui.screens.MainScreen(
+                    MainScreen(
                         authVm = authVm,
                         depositVm = depositVm
                     )

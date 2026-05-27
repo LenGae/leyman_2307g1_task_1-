@@ -17,8 +17,8 @@ class AuthInterceptor : Interceptor {
 
         request.addHeader("Content-Type", "application/json")
 
-        if (!token.isNullOrEmpty()) {
-            request.addHeader("Authorization", "Bearer $token")
+        token?.let {
+            request.addHeader("Authorization", "Bearer $it")
         }
 
         return chain.proceed(request.build())

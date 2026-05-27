@@ -4,10 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 
 object TokenManager {
-
     private const val PREF_NAME = "auth_prefs"
     private const val KEY_TOKEN = "jwt_token"
-    private const val KEY_USER_ID = "user_id"
+    private const val KEY_USER_LOGIN = "user_login"
 
     private lateinit var prefs: SharedPreferences
 
@@ -17,15 +16,11 @@ object TokenManager {
 
     var token: String?
         get() = prefs.getString(KEY_TOKEN, null)
-        set(value) {
-            prefs.edit().putString(KEY_TOKEN, value).apply()
-        }
+        set(value) = prefs.edit().putString(KEY_TOKEN, value).apply()
 
-    var userId: Long
-        get() = prefs.getLong(KEY_USER_ID, -1)
-        set(value) {
-            prefs.edit().putLong(KEY_USER_ID, value).apply()
-        }
+    var userLogin: String
+        get() = prefs.getString(KEY_USER_LOGIN, "") ?: ""
+        set(value) = prefs.edit().putString(KEY_USER_LOGIN, value).apply()
 
     fun clear() {
         prefs.edit().clear().apply()
