@@ -33,7 +33,10 @@ class DepositViewModel(private val repository: DepositRepository) : ViewModel() 
         }
     }
 
-    fun clearHistory() {
-        history = emptyList()
+    fun clearHistory(userLogin: String) {
+        viewModelScope.launch {
+            repository.clearAll()
+            history = emptyList()
+        }
     }
 }

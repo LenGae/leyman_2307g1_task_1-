@@ -1,7 +1,10 @@
 package ci.nsu.mobile.data.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class UserDto(
 
     @SerializedName("userId")
@@ -15,4 +18,5 @@ data class UserDto(
     val personId: Long,
     val createdDate: String,
     val lastLoginDate: String?
-)
+
+) : Parcelable

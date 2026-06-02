@@ -12,4 +12,7 @@ interface DepositDao {
 
     @Delete
     suspend fun delete(item: DepositCalculation)
+
+    @Query("DELETE FROM deposit_calculations")
+    suspend fun clearAll()
 }

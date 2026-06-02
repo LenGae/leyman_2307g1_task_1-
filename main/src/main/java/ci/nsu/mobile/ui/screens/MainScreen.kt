@@ -10,12 +10,14 @@ import ci.nsu.mobile.data.db.DepositCalculation
 import ci.nsu.mobile.ui.viewmodel.AuthViewModel
 import ci.nsu.mobile.ui.viewmodel.DepositViewModel
 import ci.nsu.mobile.utils.TokenManager
+import ci.nsu.mobile.data.model.UserDto
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     authVm: AuthViewModel,
-    depositVm: DepositViewModel
+    depositVm: DepositViewModel,
+    userLogin: String
 ) {
     val navController = rememberNavController()
 
@@ -49,7 +51,33 @@ fun MainScreen(
             modifier = Modifier.padding(padding)
         ) {
             composable("users") {
-                UsersScreen(authVm)
+                UsersScreen(
+                    vm = authVm,
+                    onUserClick = { user ->
+
+                        navController.currentBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("user", user)
+
+                        navController.navigate("user_details")
+                    }
+                )
+            }
+
+            composable("user_details") {
+
+                val user = navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.get<UserDto>("user")
+
+                if (user != null) {
+                    UserDetailsScreen(
+                        user = user,
+                        onBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
             }
 
             composable("history") {

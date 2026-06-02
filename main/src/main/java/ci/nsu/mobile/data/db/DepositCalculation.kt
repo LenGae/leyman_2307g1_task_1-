@@ -11,11 +11,11 @@ data class DepositCalculation(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val userLogin: String,
-    val initialAmount: Double,
+    val initialAmount: Long,
     val periodMonths: Int,
-    val interestRate: Double,
-    val monthlyTopUp: Double,
-    val finalAmount: Double,
-    val interestEarned: Double,
+    val interestRate: Int,
+    val monthlyTopUp: Long,
+    val finalAmount: Long,
+    val interestEarned: Long,
     val calculationDate: Long
 ) : Parcelable

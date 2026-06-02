@@ -16,4 +16,8 @@ class DepositRepository(private val dao: DepositDao) {
     suspend fun deleteDeposit(item: DepositCalculation) {
         dao.delete(item)
     }
+
+    suspend fun clearAll() {
+        dao.clearAll()
+    }
 }

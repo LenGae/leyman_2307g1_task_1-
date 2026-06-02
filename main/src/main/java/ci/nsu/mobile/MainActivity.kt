@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(authVm.isLoggedIn) {
                 if (!authVm.isLoggedIn) {
 
-                    depositVm.clearHistory()
+                    depositVm.clearHistory(TokenManager.userLogin)
 
                     navController.navigate("login") {
                         popUpTo(0)
@@ -68,7 +68,8 @@ class MainActivity : ComponentActivity() {
                 composable("main") {
                     MainScreen(
                         authVm = authVm,
-                        depositVm = depositVm
+                        depositVm = depositVm,
+                        userLogin = TokenManager.userLogin
                     )
                 }
             }

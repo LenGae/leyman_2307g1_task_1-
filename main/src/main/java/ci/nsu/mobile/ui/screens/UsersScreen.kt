@@ -8,14 +8,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ci.nsu.mobile.ui.viewmodel.AuthViewModel
+import ci.nsu.mobile.data.model.UserDto
 
 @Composable
 fun UsersScreen(
-    vm: AuthViewModel
+    vm: AuthViewModel,
+    onUserClick: (UserDto) -> Unit
 ) {
 
     LaunchedEffect(vm.isLoggedIn) {
-
         if (vm.isLoggedIn) {
             vm.loadUsers()
         }
@@ -38,9 +39,7 @@ fun UsersScreen(
             )
 
             Button(
-                onClick = {
-                    vm.logout()
-                }
+                onClick = { vm.logout() }
             ) {
                 Text("Выйти")
             }
@@ -48,52 +47,36 @@ fun UsersScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (vm.isLoading) {
-            CircularProgressIndicator()
-        }
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
 
-        vm.error?.let {
-            Text(
-                text = it,
-                color = MaterialTheme.colorScheme.error
-            )
-        }
+            items(vm.users) { user ->
 
-        if (vm.users.isEmpty()) {
-
-            Text("Нет пользователей")
-
-        } else {
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-
-                items(vm.users) { user ->
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        elevation = CardDefaults.cardElevation(4.dp)
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(4.dp),
+                    onClick = {
+                        onUserClick(user)
+                    }
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
                     ) {
 
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
+                        Text("👤 ${user.login}")
 
-                            Text("👤 ${user.login}")
+                        Spacer(modifier = Modifier.height(4.dp))
 
-                            Spacer(modifier = Modifier.height(4.dp))
+                        Text("📧 ${user.email}")
 
-                            Text("📧 ${user.email}")
+                        Spacer(modifier = Modifier.height(4.dp))
 
-                            Spacer(modifier = Modifier.height(4.dp))
+                        Text("📱 ${user.phoneNumber}")
 
-                            Text("📱 ${user.phoneNumber}")
+                        Spacer(modifier = Modifier.height(4.dp))
 
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            Text("🆔 ID: ${user.userId}")
-                        }
+                        Text("🆔 ID: ${user.userId}")
                     }
                 }
             }

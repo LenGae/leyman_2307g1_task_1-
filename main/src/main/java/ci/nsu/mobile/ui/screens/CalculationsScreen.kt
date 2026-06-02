@@ -1,6 +1,5 @@
 package ci.nsu.mobile.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,9 +27,28 @@ fun CalculationsScreen(
             .padding(16.dp)
     ) {
 
-        Text("История расчётов (ID: $userLogin)", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            "История расчётов (ID: $userLogin)",
+            style = MaterialTheme.typography.headlineMedium
+        )
 
         Spacer(Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                vm.clearHistory(userLogin)
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Очистить всё")
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        if (vm.history.isEmpty()) {
+            Text("История пуста")
+            return@Column
+        }
 
         LazyColumn {
             items(vm.history) { item ->
